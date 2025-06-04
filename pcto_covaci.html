@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCTO - Percorso Triennale di Alternanza Scuola-Lavoro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: #2d2c5e;
+            background: linear-gradient(135deg, #1d0e2c 0%, #2d2c5e 50%, #3d4b91 100%);
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
+            padding: 1.2rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 30px rgba(29, 14, 44, 0.15);
+            border-bottom: 1px solid rgba(94, 135, 245, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 3rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2d2c5e;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #2d2c5e;
+            font-weight: 600;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: linear-gradient(135deg, #5e87f5, #4e69c3);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(94, 135, 245, 0.3);
+        }
+
+        /* MOBILE MENU */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .hamburger span {
+            width: 28px;
+            height: 3px;
+            background: #2d2c5e;
+            margin: 4px 0;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(15px);
+                flex-direction: column;
+                padding: 2rem;
+                transform: translateY(-20px);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: 0 10px 40px rgba(29, 14, 44, 0.2);
+            }
+
+            .nav-menu.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+
+        /* MAIN CONTENT */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* HOMEPAGE */
+        .hero {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 3rem 0;
+        }
+
+        .hero h1 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .experiences-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .experience-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .experience-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-year {
+            background: linear-gradient(45deg, #4e69c3, #3d4b91);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        /* ENHANCED IMAGE STYLES */
+        .card-image {
+            width: 100%;
+            height: 220px;
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(94, 135, 245, 0.8) 0%, 
+                rgba(78, 105, 195, 0.6) 50%, 
+                rgba(61, 75, 145, 0.4) 100%);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2;
+        }
+
+        .card-image:hover::before {
+            opacity: 1;
+        }
+
+        .card-image:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 15px;
+        }
+
+        .card-image:hover img {
+            transform: scale(1.1);
+            filter: brightness(1.1) contrast(1.1);
+        }
+
+        .card-image .image-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: center;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 3;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        .card-image:hover .image-overlay {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .card-title {
+            color: #2c3e50;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-description {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-details {
+            background: linear-gradient(45deg, #4e69c3, #3d4b91);
+            color: white;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-details:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(78, 105, 195, 0.3);
+        }
+
+        /* DETAIL PAGES */
+        .detail-page {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            margin-top: 2rem;
+        }
+
+        .detail-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .detail-year {
+            background: linear-gradient(45deg, #4e69c3, #3d4b91);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .detail-title {
+            color: #2c3e50;
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .company-info {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            border-left: 5px solid #4e69c3;
+        }
+
+        .company-name {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.2rem;
+        }
+
+        .company-address {
+            color: #7f8c8d;
+            margin: 0.5rem 0;
+        }
+
+        .company-website {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .company-website:hover {
+            text-decoration: underline;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 60vh;
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 2rem 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .main-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(94, 135, 245, 0.8) 0%, 
+                rgba(78, 105, 195, 0.6) 50%, 
+                rgba(61, 75, 145, 0.4) 100%);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2;
+        }
+
+        .main-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .activities-section {
+            margin: 3rem 0;
+        }
+
+        .section-title {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .activity-item {
+            background: rgba(78, 105, 195, 0.1);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 15px;
+            border-left: 5px solid #4e69c3;
+        }
+
+        .activity-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .skills-section {
+            background: rgba(138, 80, 143, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 3rem 0;
+            border-left: 5px solid #8a508f;
+        }
+
+        .skills-title {
+            color: #8a508f;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .tech-tag {
+            background: #4e69c3;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* SMART LOCKERS SECTION */
+        .smart-lockers {
+            background: rgba(61, 75, 145, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 3rem 0;
+            border-left: 5px solid #3d4b91;
+        }
+
+        .smart-lockers-title {
+            color: #3d4b91;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .locker-images {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .locker-image {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(45deg, #ecf0f1, #bdc3c7);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7f8c8d;
+            font-size: 1rem;
+            border: 2px dashed #bdc3c7;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .experiences-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .locker-images {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-page {
+                padding: 2rem;
+            }
+
+            .main-image {
+                height: 40vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">PCTO Portfolio</div>
+            <ul class="nav-menu">
+                <li><a href="#" class="nav-link active" data-page="home">Home</a></li>
+                <li><a href="#" class="nav-link" data-page="must">MUST - 3° Anno</a></li>
+                <li><a href="#" class="nav-link" data-page="cineca">Cineca - 4° Anno</a></li>
+                <li><a href="#" class="nav-link" data-page="ermes">Ermes - 5° Anno</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- HOMEPAGE -->
+        <div id="home" class="page active">
+            <div class="hero">
+                <h1>Percorso PCTO</h1>
+                <p>Tre anni di crescita professionale attraverso l'alternanza scuola-lavoro</p>
+            </div>
+
+            <div class="experiences-grid">
+                <!-- MUST CARD -->
+                <div class="experience-card">
+                    <div class="card-year">Terza Superiore</div>
+                    <div class="card-image">
+                        <img src="MAST.jpg" width="350" height="200">
+                    </div>
+                    <h3 class="card-title">Progetto "Start Up Mast" - MUST</h3>
+                    <p class="card-description">
+                        Prima esperienza nel mondo del lavoro attraverso progetti creativi di packaging e team working. 
+                        Focus su collaborazione, creatività e comprensione dei processi produttivi.
+                    </p>
+                    <a href="#" class="btn-details" data-page="must">Vedi Dettagli</a>
+                </div>
+
+                <!-- CINECA CARD -->
+                <div class="experience-card">
+                    <div class="card-year">Quarta Superiore</div>
+                    <div class="card-image">
+                        <img src="cineca.jpg" width="350" height="200">
+                    </div>
+                    <h3 class="card-title">Stage Tecnico - Cineca Bologna</h3>
+                    <p class="card-description">
+                        Esperienza in grande azienda governativa specializzata in software universitario. 
+                        Sviluppo enterprise con Java e Spring Boot su progetti large-scale.
+                    </p>
+                    <a href="#" class="btn-details" data-page="cineca">Vedi Dettagli</a>
+                </div>
+
+                <!-- ERMES CARD -->
+                <div class="experience-card">
+                    <div class="card-year">Quinta Superiore</div>
+                    <div class="card-image">
+                        <img src="ermes.jpg" width="350" height="200">
+                    </div>
+                    <h3 class="card-title">Sviluppo IoT - Ermes srl</h3>
+                    <p class="card-description">
+                        Sviluppo web completo e strumenti per smart lockers IoT. 
+                        Apprendimento di Python, Flask e Linux in ambiente startup innovativo.
+                    </p>
+                    <a href="#" class="btn-details" data-page="ermes">Vedi Dettagli</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- MUST DETAIL PAGE -->
+        <div id="must" class="page">
+            <div class="detail-page">
+                <div class="detail-header">
+                    <div class="detail-year">Terza Superiore</div>
+                    <h1 class="detail-title">Progetto "Start Up Mast" - MUST</h1>
+                </div>
+
+                <div class="main-image">
+                    <img src="MAST.jpg" width="350" height="200">
+                </div>
+
+                <p style="font-size: 1.1rem; text-align: center; margin: 2rem 0; color: #555;">
+                    Il progetto "Start Up Mast" ha rappresentato la mia prima esperienza significativa nel mondo professionale, 
+                    permettendomi di entrare in contatto con una realtà aziendale innovativa e di imparare a lavorare in gruppo.
+                </p>
+
+                <div class="activities-section">
+                    <h2 class="section-title">Attività Svolte</h2>
+                    
+                    <div class="activity-item">
+                        <div class="activity-title">Visita conoscitiva aziendale</div>
+                        <p>Comprensione della struttura organizzativa e dei processi produttivi attraverso l'osservazione diretta del funzionamento dei macchinari e delle dinamiche lavorative.</p>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-title">Progetto di packaging</div>
+                        <p>Partecipazione attiva alla progettazione creativa di soluzioni di imballaggio, sviluppando attenzione ai dettagli e capacità di problem solving in team.</p>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-title">Presentazione finale</div>
+                        <p>Ideazione completa di un prodotto dal concept alla presentazione, culminata in una fase espositiva coinvolgente che ha valorizzato il lavoro di squadra.</p>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-title">Team working e creatività</div>
+                        <p>Attività collaborative mirate allo sviluppo delle capacità relazionali e della creatività progettuale attraverso sessioni di brainstorming e lavoro di gruppo.</p>
+                    </div>
+                </div>
+
+                <div class="skills-section">
+                    <h3 class="skills-title">Competenze Acquisite</h3>
+                    <p>Primo contatto concreto con il mondo del lavoro, sviluppo delle capacità collaborative, comprensione dei processi produttivi industriali, creatività applicata al design del prodotto.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CINECA DETAIL PAGE -->
+        <div id="cineca" class="page">
+            <div class="detail-page">
+                <div class="detail-header">
+                    <div class="detail-year">Quarta Superiore</div>
+                    <h1 class="detail-title">Stage Tecnico-Informatico - Cineca Bologna</h1>
+                </div>
+
+                <div class="company-info">
+                    <div class="company-name">Cineca</div>
+                    <div class="company-address">Via Magnanelli, 6/3, 40033 Casalecchio di Reno BO</div>
+                    <a href="https://www.cineca.it" class="company-website" target="_blank">https://www.cineca.it</a>
+                    <p style="margin-top: 1rem; color: #555;">Grande azienda governativa specializzata nello sviluppo di software per università, con un ampio dipartimento di programmatori esperti.</p>
+                </div>
+
+                <div class="main-image">
+                    <img src="cineca.jpg" width="350" height="200">
+                </div>
+
+                <div class="activities-section">
+                    <h2 class="section-title">Attività Svolte</h2>
+                    
+                    <div class="activity-item">
+                        <div class="activity-title">Studio del codebase esistente</div>
+                        <p>Analisi approfondita di un progetto software di grandi dimensioni per comprendere l'architettura e l'organizzazione dei sistemi enterprise.</p>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-title">Implementazione di nuove funzionalità</div>
+                        <p>Sviluppo di componenti aggiuntivi per migliorare il progetto esistente, acquisendo esperienza pratica nella modifica e ottimizzazione del codice.</p>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-title">Risoluzione di bug software</div>
+                        <p>Identificazione e correzione di problemi nel codice, sviluppando capacità di debugging e analisi sistematica degli errori.</p>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-title">Partecipazione a meeting settimanali</div>
+                        <p>Presentazione dei progressi raggiunti al team, sviluppando competenze comunicative e capacità di reporting tecnico.</p>
+                    </div>
+                </div>
+
+                <div class="skills-section">
+                    <h3 class="skills-title">Tecnologie e Competenze Sviluppate</h3>
+                    <p>Approfondimento della programmazione enterprise e comprensione delle dinamiche di sviluppo in team strutturati.</p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Java Enterprise</span>
+                        <span class="tech-tag">Spring Boot Framework</span>
+                        <span class="tech-tag">Sistemi Large-Scale</span>
+                        <span class="tech-tag">Team Collaboration</span>
+                        <span class="tech-tag">Code Review</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ERMES DETAIL PAGE -->
+        <div id="ermes" class="page">
+            <div class="detail-page">
+                <div class="detail-header">
+                    <div class="detail-year">Quinta Superiore</div>
+                    <h1 class="detail-title">Sviluppo Web e IoT - Ermes srl</h1>
+                </div>
+
+                <div class="company-info">
+                    <div class="company-name">Ermes srl</div>
+                    <div class="company-address">Via G. Grassilli, 11, 40012 Calderara di Reno BO</div>
+                    <a href="https://ermes-online.it/it/" class="company-website" target="_blank">https://ermes-online.it/it/</a>
+                    <p style="margin-top: 1rem; color: #555;">Piccola azienda privata commerciale con dipartimento di sviluppo di tre programmatori, focalizzata su soluzioni software innovative e rivendita di stampanti commerciali.</p>
+                </div>
+
+                <div class="main-image">
+                    <img src="ermes.jpg" width="350" height="200">
+                </div>
+
+                <div class="activities-section">
+                    <h2 class="section-title">Attività Svolte</h2>
+                    
+                    <div class="activity-item">
+                        <div class="activity-title">Sviluppo website da zero</div>
+                        <p>Progettazione e programmazione completa di un sito web senza basarsi su versioni preesistenti, gestendo l'intero ciclo di sviluppo del progetto.</p>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-title">Programmazione di strumenti di debugging</div>
+                        <p>Creazione di tools specifici per il debugging degli smart lockers, richiedendo problem solving avanzato e comprensione di sistemi IoT.</p>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-title">Apprendimento di nuove tecnologie</div>
+                        <p>Acquisizione di competenze in Linux command line e Flask framework di Python, espandendo significativamente il proprio stack tecnologico.</p>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-title">Comunicazione diretta con team leader</div>
+                        <p>Collaborazione in ambiente informale con feedback immediato, sviluppando capacità di dialogo tecnico e adattabilità professionale.</p>
+                    </div>
+                </div>
+
+                <div class="smart-lockers">
+                    <h3 class="smart-lockers-title">Progetto Smart Lockers - Innovazione IoT</h3>
+                    <p>Sviluppo di una soluzione web per la gestione e il debugging di smart lockers, rappresentando una nuova iniziativa di business dell'azienda nel settore dell'Internet of Things.</p>
+                    
+                    <div class="locker-images">
+                        <div class="locker-image">
+                            <img src="locker_1.jpeg" width="350" height="200">
+                        </div>
+                        <div class="locker-image">
+                            <img src="locker_2.jpeg" width="350" height="200">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skills-section">
+                    <h3 class="skills-title">Tecnologie e Competenze Sviluppate</h3>
+                    <p>Acquisizione di competenze full-stack e capacità di lavorare su progetti innovativi in ambito IoT.</p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Flask Framework</span>
+                        <span class="tech-tag">Linux Command Line</span>
+                        <span class="tech-tag">Web Development</span>
+                        <span class="tech-tag">IoT Systems</span>
+                        <span class="tech-tag">Debugging Tools</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functionality
+        const navLinks = document.querySelectorAll('.nav-link');
+        const pages = document.querySelectorAll('.page');
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        const detailButtons = document.querySelectorAll('.btn-details');
+
+        // Handle navigation
+        function showPage(pageId) {
+            pages.forEach(page => page.classList.remove('active'));
+            navLinks.forEach(link => link.classList.remove('active'));
+            
+            document.getElementById(pageId).classList.add('active');
+            document.querySelector(`[data-page="${pageId}"]`).classList.add('active');
+            
+            // Close mobile menu
+            navMenu.classList.remove('active');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Nav links event listeners
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.getAttribute('data-page');
+                showPage(pageId);
+            });
+        });
+
+        // Detail buttons event listeners
+        detailButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = button.getAttribute('data-page');
+                showPage(pageId);
+            });
+        });
+
+        // Add click handlers for card images
+        const cardImages = document.querySelectorAll('.card-image');
+        cardImages.forEach(image => {
+            image.addEventListener('click', () => {
+                // Get the closest parent card and find its button
+                const card = image.closest('.experience-card');
+                const button = card.querySelector('.btn-details');
+                const pageId = button.getAttribute('data-page');
+                showPage(pageId);
+            });
+        });
+
+        // Mobile menu toggle
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
+                navMenu.classList.remove('active');
+            }
+        });
+
+        // Smooth animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.experience-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
